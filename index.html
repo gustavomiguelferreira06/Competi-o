@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Desafio Fim de Ano</title>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f5f4ef;--card:#ffffff;--ink:#1b1b1b;--mute:#6d6d68;--line:#e7e5dc;
+  --c1:#ea580c;--c2:#0d9488;--c1s:#ffedd5;--c2s:#ccfbf1;--accent:#1b1b1b;--accent-ink:#fff;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121212;--card:#1e1e1e;--ink:#f1f1ef;--mute:#9b9b95;--line:#2f2f2c;
+    --c1:#fb923c;--c2:#2dd4bf;--c1s:#3a2412;--c2s:#0f2e2a;--accent:#f1f1ef;--accent-ink:#121212;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121212;--card:#1e1e1e;--ink:#f1f1ef;--mute:#9b9b95;--line:#2f2f2c;
+  --c1:#fb923c;--c2:#2dd4bf;--c1s:#3a2412;--c2s:#0f2e2a;--accent:#f1f1ef;--accent-ink:#121212;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.4;padding-bottom:170px}
+.wrap{max-width:520px;margin:0 auto;padding:16px 14px}
+.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}
+h1{font-size:22px;margin:0;letter-spacing:-.3px}
+.sub{color:var(--mute);font-size:13px;margin-top:2px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.hbtns{display:flex;gap:8px;align-items:center}
+.icon{background:var(--card);border:1px solid var(--line);color:var(--ink);width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);font-weight:700}
+.score{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;text-align:center}
+.pl .av{width:44px;height:44px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff}
+.pl .nm{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl .big{font-size:46px;font-weight:800;line-height:1;margin:4px 0 2px;letter-spacing:-1px}
+.pl .sm{font-size:12px;color:var(--mute)}
+.vs{font-size:12px;font-weight:800;color:var(--mute)}
+.tug{height:10px;border-radius:999px;overflow:hidden;display:flex;background:var(--line);margin:14px 0 8px}
+.tug i{display:block;height:100%;transition:width .5s}
+.status{text-align:center;font-weight:600;font-size:14px}
+.duel{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:9px 0;border-top:1px solid var(--line);gap:8px}
+.duel:first-of-type{border-top:0}
+.duel .v{font-size:18px;font-weight:500;color:var(--mute)}
+.duel .v.r{text-align:right}
+.duel .v.lead{font-weight:800;color:var(--ink)}
+.duel .lab{font-size:12.5px;color:var(--mute);text-align:center;min-width:104px}
+.c1{color:var(--c1)}.c2{color:var(--c2)}
+.duel .v.lead.a{color:var(--c1)}.duel .v.lead.b{color:var(--c2)}
+.gauges{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gauge{position:relative;text-align:center}
+.gauge svg{width:100%;height:auto;display:block}
+.gv{position:absolute;left:0;right:0;top:34%;line-height:1}
+.gv b{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.gv small{display:block;font-size:11px;color:var(--mute);margin-top:2px}
+.gn{font-weight:700;font-size:13.5px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gs{font-size:12px;color:var(--mute)}
+.goalnote{text-align:center;font-size:12.5px;color:var(--mute);margin-top:8px}
+.wk{display:flex;gap:3px;align-items:flex-end}
+.wcol{flex:1;min-width:0;text-align:center;border-radius:6px;padding:0 1px}
+.wcol.cur{background:var(--bg)}
+.bars{height:96px;display:flex;gap:2px;align-items:flex-end;padding-top:14px}
+.bar{flex:1;border-radius:3px 3px 0 0;position:relative;min-height:2px;transition:height .4s}
+.bar.z{opacity:.25}
+.bar span{position:absolute;top:-13px;left:0;right:0;font-size:9.5px;font-weight:700;color:var(--mute)}
+.wl{font-size:10px;color:var(--mute);margin-top:3px}
+.legend{display:flex;gap:14px;justify-content:center;font-size:12px;color:var(--mute);margin-top:10px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.mrow{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center;padding:6px 0}
+.mrow .ml{font-size:13px;font-weight:600}
+.mb{display:flex;flex-direction:column;gap:3px}
+.mbar{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700}
+.mbar i{display:block;height:8px;border-radius:999px;min-width:3px}
+.item{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0}
+.item .ic{font-size:20px;width:30px;text-align:center}
+.item .mid{flex:1;min-width:0;font-size:14px}
+.item .mid .d{font-size:12px;color:var(--mute)}
+.del{background:none;border:1px solid var(--line);color:var(--mute);border-radius:8px;padding:5px 9px;font-size:12px;cursor:pointer}
+.del.sure{background:#dc2626;border-color:#dc2626;color:#fff}
+.empty{text-align:center;color:var(--mute);padding:22px 8px;font-size:14px}
+.banner{background:var(--c1s);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:20}
+.tabs button{flex:1;background:none;border:0;color:var(--mute);font-size:11px;font-weight:600;padding:6px 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabs button span{font-size:20px;line-height:1}
+.tabs button.on{color:var(--ink)}
+.fab{position:fixed;right:16px;bottom:calc(74px + env(safe-area-inset-bottom,0px));background:var(--accent);color:var(--accent-ink);border:0;border-radius:999px;padding:14px 20px;font-size:15px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.25);cursor:pointer;z-index:21}
+.bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-radius:20px 20px 0 0;padding:10px 16px calc(18px + env(safe-area-inset-bottom,0px));z-index:41;max-height:88%;overflow-y:auto;max-width:520px;margin:0 auto}
+.sheet h2{margin:6px 0 12px;font-size:18px}
+.grab{width:38px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 6px}
+.sheet label,.lbl{display:block;font-size:12.5px;font-weight:600;color:var(--mute);margin:12px 0 4px}
+.sheet input{width:100%;font-size:16px;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-family:inherit}
+.seg{display:flex;gap:6px;background:var(--bg);padding:4px;border-radius:12px}
+.seg button{flex:1;border:0;background:none;padding:10px;border-radius:9px;font-size:14px;font-weight:700;color:var(--mute);cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip2{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);padding:9px 14px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer}
+.chip2.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn{width:100%;margin-top:16px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.5}
+.btn.ghost{background:none;color:var(--mute);border:1px solid var(--line);margin-top:8px}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(130px + env(safe-area-inset-bottom,0px));background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;z-index:60;max-width:90%;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap" id="main"><div class="empty">Carregando…</div></div>
+<button type="button" class="fab" id="fab" data-act="add" hidden>＋ Registrar</button>
+<nav class="tabs" id="tabs">
+  <button type="button" data-act="tab" data-t="placar" class="on"><span>🏆</span>Placar</button>
+  <button type="button" data-act="tab" data-t="corrida"><span>🏃</span>Corrida</button>
+  <button type="button" data-act="tab" data-t="academia"><span>🏋️</span>Academia</button>
+  <button type="button" data-act="tab" data-t="hist"><span>📋</span>Histórico</button>
+</nav>
+<div class="bg" id="bg" hidden data-act="close"></div>
+<div class="sheet" id="sheet" hidden></div>
+<div id="toast" hidden></div>
+
+<script type="module">
+/* =====================================================================
+   CONFIGURAÇÃO DO FIREBASE  —  cole aqui os dados do seu projeto
+   (Firebase Console > Configurações do projeto > Seus apps > Web)
+   ===================================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyAXTj8OtIwB0iZMsOGjKe2nOHFyicKDvlA",
+  authDomain: "competicao-84a97.firebaseapp.com",
+  projectId: "competicao-84a97",
+  storageBucket: "competicao-84a97.firebasestorage.app",
+  messagingSenderId: "1027885066265",
+  appId: "1:1027885066265:web:abfda531552e4eac95a288"
+};
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+function makeDb(){
+  var app=initializeApp(firebaseConfig), fs=getFirestore(app);
+  function docRef(path){
+    var r=doc(fs,path);
+    return {
+      set:function(d){return setDoc(r,d);},
+      update:function(d){return updateDoc(r,d);},
+      delete:function(){return deleteDoc(r);},
+      onSnapshot:function(n,e){return onSnapshot(r,function(x){n({exists:x.exists(),data:function(){return x.data();}});},e);}
+    };
+  }
+  return {
+    doc:docRef,
+    collection:function(path){
+      var c=collection(fs,path);
+      return {
+        add:function(d){return addDoc(c,d);},
+        onSnapshot:function(n,e){return onSnapshot(c,function(x){n({docs:x.docs});},e);}
+      };
+    }
+  };
+}
+
+(function(){
+'use strict';
+
+var START='2026-10-12', END='2026-12-31';
+var MUSCLES=['Peito','Costas','Perna','Ombros','Bíceps','Tríceps','Abdômen','Glúteos'];
+var DEFAULT_GOAL=150;
+
+var UID_KEY='desafio_uid', db=null, uid=null, needConfig=false;
+var players=[], workouts=[], settings={kmGoal:DEFAULT_GOAL};
+var loaded={p:false,w:false,s:false}, forceShow=false, nodb=false, subErr='';
+var tab='placar', addKind='run', selM=new Set(), saving=false, delId=null, delTimer=null, joinPrompted=false, toastTimer=null;
+
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function pad(n){return n<10?'0'+n:''+n;}
+function today(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function parts(s){var p=s.split('-');return [+p[0],+p[1],+p[2]];}
+function utc(s){var p=parts(s);return Date.UTC(p[0],p[1]-1,p[2]);}
+function diffDays(a,b){return Math.round((utc(b)-utc(a))/86400000);}
+function addDays(s,n){var p=parts(s);return new Date(Date.UTC(p[0],p[1]-1,p[2]+n)).toISOString().slice(0,10);}
+function clampDate(s){return s<START?START:(s>END?END:s);}
+var TOTAL_DAYS=diffDays(START,END)+1;
+var WEEKS=Math.ceil(TOTAL_DAYS/7);
+function fmtDate(s){var p=parts(s);return new Date(p[0],p[1]-1,p[2]).toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});}
+function f1(n){return (Math.round(n*10)/10).toFixed(1).replace('.',',');}
+function fInt(n){return ''+n;}
+function fPace(m){if(m==null)return '—';var t=Math.round(m*60);return Math.floor(t/60)+':'+pad(t%60)+'/km';}
+
+function toast(msg){
+  var t=$('toast');t.textContent=msg;t.hidden=false;
+  clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.hidden=true;},2800);
+}
+
+/* ---------- dados derivados ---------- */
+function getP(){
+  var a=players[0]||{id:'__a',name:'Aguardando…',empty:true};
+  var b=players[1]||{id:'__b',name:'Aguardando…',empty:true};
+  return [a,b];
+}
+function me(){return players.find(function(p){return p.id===uid;})||null;}
+
+function stats(pid){
+  var ws=workouts.filter(function(w){return w.uid===pid&&w.date>=START&&w.date<=END;});
+  var runs=ws.filter(function(w){return w.type==='run';});
+  var gym=ws.filter(function(w){return w.type==='gym';});
+  var km=0,pk=0,pm=0,longest=0;
+  runs.forEach(function(w){
+    var k=+w.km||0;km+=k;if(k>longest)longest=k;
+    if(w.dur>0&&k>0){pk+=k;pm+=+w.dur;}
+  });
+  var days=new Set(ws.map(function(w){return w.date;}));
+  var mus={};MUSCLES.forEach(function(m){mus[m]=0;});
+  gym.forEach(function(w){(w.muscles||[]).forEach(function(m){if(m in mus)mus[m]++;});});
+  var streak=0,d=today();
+  if(!days.has(d))d=addDays(d,-1);
+  while(days.has(d)){streak++;d=addDays(d,-1);}
+  var elapsed=Math.min(TOTAL_DAYS,Math.max(1,diffDays(START,today())+1));
+  var weeksEl=Math.max(1,elapsed/7);
+  return {n:ws.length,runs:runs.length,gym:gym.length,km:km,longest:longest,
+    avgKm:runs.length?km/runs.length:null,pace:pk>0?pm/pk:null,days:days.size,mus:mus,
+    streak:streak,runsWk:runs.length/weeksEl,gymWk:gym.length/weeksEl,
+    muscleCount:MUSCLES.filter(function(m){return mus[m]>0;}).length};
+}
+
+function weekly(pid,kind){
+  var a=[];for(var i=0;i<WEEKS;i++)a.push(0);
+  workouts.forEach(function(w){
+    if(w.uid!==pid||w.date<START||w.date>END)return;
+    if(kind!=='all'&&w.type!==kind)return;
+    var idx=Math.floor(diffDays(START,w.date)/7);
+    if(idx>=0&&idx<WEEKS)a[idx]++;
+  });
+  return a;
+}
+
+/* ---------- componentes ---------- */
+function duel(label,a,b,fmt,lowerBetter){
+  var la=false,lb=false;
+  if(a!=null&&b!=null&&a!==b){
+    if(lowerBetter){la=a<b;lb=b<a;}else{la=a>b;lb=b>a;}
+    if(!lowerBetter&&a===0&&b===0){la=lb=false;}
+  }
+  return '<div class="duel"><div class="v a'+(la?' lead':'')+'">'+(a==null?'—':fmt(a))+'</div><div class="lab">'+label+'</div><div class="v b r'+(lb?' lead':'')+'">'+(b==null?'—':fmt(b))+'</div></div>';
+}
+
+function legend(P){
+  return '<div class="legend"><span><i style="background:var(--c1)"></i>'+esc(P[0].name)+'</span><span><i style="background:var(--c2)"></i>'+esc(P[1].name)+'</span></div>';
+}
+
+function weekChart(P,kind){
+  var a=weekly(P[0].id,kind),b=weekly(P[1].id,kind);
+  var mx=Math.max.apply(null,[1].concat(a,b));
+  var cur=Math.min(WEEKS-1,Math.max(0,Math.floor(diffDays(START,today())/7)));
+  var h='<div class="wk">';
+  for(var i=0;i<WEEKS;i++){
+    h+='<div class="wcol'+(i===cur?' cur':'')+'"><div class="bars">'+
+      '<div class="bar'+(a[i]?'':' z')+'" style="height:'+(a[i]/mx*100)+'%;background:var(--c1)"><span>'+(a[i]||'')+'</span></div>'+
+      '<div class="bar'+(b[i]?'':' z')+'" style="height:'+(b[i]/mx*100)+'%;background:var(--c2)"><span>'+(b[i]||'')+'</span></div>'+
+      '</div><div class="wl">S'+(i+1)+'</div></div>';
+  }
+  return h+'</div>'+legend(P);
+}
+
+function gauge(p,s,color){
+  var goal=settings.kmGoal||DEFAULT_GOAL;
+  var pct=Math.min(100,s.km/goal*100);
+  var arc='M10 62 A50 50 0 0 1 110 62';
+  var prog=pct>=0.5?'<path d="'+arc+'" pathLength="100" fill="none" stroke="'+color+'" stroke-width="10" stroke-linecap="round" stroke-dasharray="'+pct+' 100"/>':'';
+  return '<div class="gauge"><svg viewBox="0 0 120 70"><path d="'+arc+'" pathLength="100" fill="none" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/>'+prog+'</svg>'+
+    '<div class="gv"><b>'+f1(s.km)+'</b><small>km</small></div>'+
+    '<div class="gn" style="color:'+color+'">'+esc(p.name)+'</div><div class="gs">'+(s.km>=goal?'🎉 meta batida':Math.round(pct)+'% da meta')+'</div></div>';
+}
+
+/* ---------- telas ---------- */
+function viewPlacar(P,s){
+  var t1=s[0].n,t2=s[1].n,share=(t1+t2)?t1/(t1+t2)*100:50;
+  var ended=today()>END,status;
+  if(t1===t2)status=t1===0?'Ninguém treinou ainda — larguem! 🏁':(ended?'Terminou empatado!':'Empate técnico! 🤝');
+  else{
+    var lead=t1>t2?P[0]:P[1],diff=Math.abs(t1-t2);
+    status=ended?'🏆 Campeão: '+esc(lead.name):esc(lead.name)+' lidera por '+diff+' treino'+(diff>1?'s':'');
+  }
+  function pl(p,st,col){
+    var ini=p.empty?'?':esc((p.name||'?').trim().charAt(0).toUpperCase());
+    return '<div class="pl"><div class="av" style="background:'+col+'">'+ini+'</div><div class="nm">'+esc(p.name)+(p.id===uid?' (você)':'')+'</div>'+
+      '<div class="big" style="color:'+col+'">'+st.n+'</div><div class="sm">'+st.runs+' corridas · '+st.gym+' academia</div></div>';
+  }
+  return '<div class="card"><div class="score">'+pl(P[0],s[0],'var(--c1)')+'<div class="vs">VS</div>'+pl(P[1],s[1],'var(--c2)')+'</div>'+
+    '<div class="tug"><i style="width:'+share+'%;background:var(--c1)"></i><i style="width:'+(100-share)+'%;background:var(--c2)"></i></div>'+
+    '<div class="status">'+status+'</div></div>'+
+    '<div class="card"><h3>Frente a frente</h3>'+
+      duel('Treinos totais',s[0].n,s[1].n,fInt)+
+      duel('Corridas',s[0].runs,s[1].runs,fInt)+
+      duel('Academia',s[0].gym,s[1].gym,fInt)+
+      duel('Km corridos',s[0].km,s[1].km,f1)+
+      duel('Dias ativos',s[0].days,s[1].days,fInt)+
+      duel('Sequência (dias)',s[0].streak,s[1].streak,fInt)+
+    '</div>'+
+    '<div class="card"><h3>Treinos por semana</h3>'+weekChart(P,'all')+'</div>';
+}
+
+function viewCorrida(P,s){
+  var goal=settings.kmGoal||DEFAULT_GOAL;
+  return '<div class="card"><h3>Medidor de distância</h3><div class="gauges">'+gauge(P[0],s[0],'var(--c1)')+gauge(P[1],s[1],'var(--c2)')+'</div>'+
+    '<div class="goalnote">Meta de cada um: '+f1(goal).replace(',0','')+' km · altere em ⚙︎</div></div>'+
+    '<div class="card"><h3>Frequência de corrida</h3>'+
+      duel('Corridas',s[0].runs,s[1].runs,fInt)+
+      duel('Por semana',s[0].runsWk,s[1].runsWk,f1)+
+      duel('Km total',s[0].km,s[1].km,f1)+
+      duel('Média por corrida (km)',s[0].avgKm,s[1].avgKm,f1)+
+      duel('Maior corrida (km)',s[0].longest||null,s[1].longest||null,f1)+
+      duel('Ritmo médio',s[0].pace,s[1].pace,fPace,true)+
+    '</div>'+
+    '<div class="card"><h3>Corridas por semana</h3>'+weekChart(P,'run')+'</div>';
+}
+
+function viewAcademia(P,s){
+  var mx=1;
+  MUSCLES.forEach(function(m){mx=Math.max(mx,s[0].mus[m],s[1].mus[m]);});
+  var rows='';
+  MUSCLES.forEach(function(m){
+    var a=s[0].mus[m],b=s[1].mus[m];
+    rows+='<div class="mrow"><div class="ml">'+m+'</div><div class="mb">'+
+      '<div class="mbar"><i style="width:'+(a/mx*100)+'%;background:var(--c1);opacity:'+(a?1:.25)+'"></i><span class="c1">'+a+'</span></div>'+
+      '<div class="mbar"><i style="width:'+(b/mx*100)+'%;background:var(--c2);opacity:'+(b?1:.25)+'"></i><span class="c2">'+b+'</span></div>'+
+    '</div></div>';
+  });
+  return '<div class="card"><h3>Frequência de academia</h3>'+
+      duel('Sessões',s[0].gym,s[1].gym,fInt)+
+      duel('Por semana',s[0].gymWk,s[1].gymWk,f1)+
+      duel('Grupos diferentes',s[0].muscleCount,s[1].muscleCount,fInt)+
+    '</div>'+
+    '<div class="card"><h3>O que foi treinado</h3>'+rows+legend(P)+'</div>'+
+    '<div class="card"><h3>Academia por semana</h3>'+weekChart(P,'gym')+'</div>';
+}
+
+function viewHist(P){
+  var items=workouts.filter(function(w){return w.date>=START&&w.date<=END;}).sort(function(a,b){
+    return a.date<b.date?1:a.date>b.date?-1:((b.ts||0)-(a.ts||0));
+  });
+  if(!items.length)return '<div class="card"><div class="empty">Nenhum treino registrado ainda.<br>Toque em “＋ Registrar” pra abrir o placar.</div></div>';
+  var byId={};players.forEach(function(p){byId[p.id]=p;});
+  var h='<div class="card"><h3>Todos os treinos ('+items.length+')</h3>';
+  items.forEach(function(w){
+    var p=byId[w.uid],col=(p&&players[0]&&p.id===players[0].id)?'var(--c1)':'var(--c2)';
+    var what=w.type==='run'?'correu '+f1(+w.km||0)+' km':'academia: '+esc((w.muscles||[]).join(', '));
+    if(w.dur>0)what+=' · '+w.dur+' min';
+    var own=w.uid===uid;
+    h+='<div class="item"><div class="ic">'+(w.type==='run'?'🏃':'🏋️')+'</div><div class="mid"><b style="color:'+col+'">'+esc(p?p.name:'?')+'</b> '+(w.type==='run'?what:what)+
+      '<div class="d">'+esc(fmtDate(w.date))+'</div></div>'+
+      (own?'<button type="button" class="del'+(delId===w.id?' sure':'')+'" data-act="del" data-id="'+esc(w.id)+'">'+(delId===w.id?'Confirmar?':'Apagar')+'</button>':'')+
+    '</div>';
+  });
+  return h+'</div>';
+}
+
+function render(){
+  var m=$('main');
+  if(nodb){
+    m.innerHTML='<div class="card"><div class="empty">'+(needConfig?'Falta configurar o Firebase.<br>Cole os dados do seu projeto no início do arquivo HTML.':'Não consegui conectar ao banco de dados.<br>Verifique a internet e a configuração.')+'</div></div>';
+    $('fab').hidden=true;return;
+  }
+  if(!(loaded.p&&loaded.w&&loaded.s)&&!forceShow){
+    m.innerHTML='<div class="empty">Carregando…</div>';$('fab').hidden=true;return;
+  }
+  var P=getP(),s=[stats(P[0].id),stats(P[1].id)];
+  var left=today()>END?'Encerrado':(today()<START?'Começa em '+diffDays(today(),START)+' dias':'Faltam '+diffDays(today(),END)+' dias');
+  var h='<div class="hero"><div><h1>Desafio Fim de Ano</h1><div class="sub">12 out → 31 dez · quem treinou mais vezes</div></div>'+
+        '<div class="hbtns"><span class="chip">'+left+'</span><button type="button" class="icon" data-act="settings" aria-label="Ajustes">⚙︎</button></div></div>';
+  if(subErr)h+='<div class="banner">'+esc(subErr)+'</div>';
+  var mine=me();
+  if(!mine)h+='<div class="banner">Você ainda não escolheu quem é. <b data-act="join" style="text-decoration:underline;cursor:pointer">Escolher agora</b></div>';
+  if(tab==='placar')h+=viewPlacar(P,s);
+  else if(tab==='corrida')h+=viewCorrida(P,s);
+  else if(tab==='academia')h+=viewAcademia(P,s);
+  else h+=viewHist(P);
+  m.innerHTML=h;
+  var fab=$('fab');
+  if(mine){fab.hidden=false;fab.textContent='＋ Registrar';fab.setAttribute('data-act','add');}
+  else{fab.hidden=false;fab.textContent='Quem é você?';fab.setAttribute('data-act','join');}
+}
+
+/* ---------- sheets ---------- */
+function openSheet(html){$('sheet').innerHTML=html;$('sheet').hidden=false;$('bg').hidden=false;}
+function closeSheet(){$('sheet').hidden=true;$('bg').hidden=true;$('sheet').innerHTML='';}
+
+function openJoin(){
+  var h='<div class="grab"></div><h2>Quem é você?</h2>';
+  if(players.length){
+    h+='<div class="sub">Já está na disputa? Toque no seu nome:</div>';
+    players.forEach(function(p){
+      h+='<button type="button" class="btn ghost" style="margin-top:10px;color:var(--ink)" data-act="claim" data-id="'+esc(p.id)+'">Sou '+esc(p.name)+'</button>';
+    });
+  }
+  if(players.length<2){
+    h+='<label>'+(players.length?'Ou entre com um nome novo':'Seu nome ou apelido')+'<input id="fName" type="text" maxlength="20" placeholder="Ex.: Gustavo" autocomplete="off"></label>'+
+       '<button type="button" class="btn" data-act="saveJoin" id="btnJoin">Entrar na disputa</button>';
+  }
+  h+='<button type="button" class="btn ghost" data-act="close">Agora não</button>';
+  openSheet(h);
+}
+
+function openAdd(){
+  var mx=today()<START?START:(today()>END?END:today());
+  addKind='run';selM=new Set();
+  openSheet('<div class="grab"></div><h2>Registrar treino</h2>'+
+    '<div class="seg"><button type="button" class="on" data-act="kind" data-k="run">🏃 Corrida</button><button type="button" data-act="kind" data-k="gym">🏋️ Academia</button></div>'+
+    '<label>Data<input id="fDate" type="date" min="'+START+'" max="'+mx+'" value="'+clampDate(today())+'"></label>'+
+    '<div id="blkRun"><label>Distância (km)<input id="fKm" type="text" inputmode="decimal" placeholder="Ex.: 5,2" autocomplete="off"></label></div>'+
+    '<div id="blkGym" hidden><div class="lbl">O que você treinou? (pode marcar vários)</div><div class="chips">'+
+      MUSCLES.map(function(x){return '<button type="button" class="chip2" data-act="chip" data-m="'+x+'">'+x+'</button>';}).join('')+
+    '</div></div>'+
+    '<label>Duração em minutos (opcional)<input id="fDur" type="number" inputmode="numeric" min="0" placeholder="Ex.: 45"></label>'+
+    '<button type="button" class="btn" data-act="save" id="btnSave">Salvar treino</button>');
+}
+
+function openSettings(){
+  var mine=me();
+  openSheet('<div class="grab"></div><h2>Ajustes</h2>'+
+    (mine?'<label>Meu nome no placar<input id="sName" type="text" maxlength="20" value="'+esc(mine.name)+'" autocomplete="off"></label>':'')+
+    '<label>Meta de km de cada um (medidor)<input id="sGoal" type="number" inputmode="numeric" min="10" max="2000" value="'+(settings.kmGoal||DEFAULT_GOAL)+'"></label>'+
+    '<button type="button" class="btn" data-act="saveSettings">Salvar ajustes</button>'+
+    (mine?'<button type="button" class="btn ghost" data-act="switch">Não sou eu (trocar de jogador)</button>':'')+
+    '<button type="button" class="btn ghost" data-act="close">Fechar</button>');
+}
+
+function writeError(e){
+  if(e&&e.code==='permission-denied')toast('Sem permissão. Confira as regras do Firestore.');
+  else toast('Não consegui salvar. Tente de novo.');
+}
+
+function setUid(id){
+  uid=id;
+  try{if(id)localStorage.setItem(UID_KEY,id);else localStorage.removeItem(UID_KEY);}catch(e){}
+}
+
+async function saveJoin(){
+  var n=($('fName').value||'').trim();
+  if(!n){toast('Digite seu nome');return;}
+  if(!db)return;
+  if(players.length>=2){toast('A disputa já tem dois jogadores');return;}
+  var id='p_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+  var b=$('btnJoin');b.disabled=true;
+  try{await db.doc('players/'+id).set({name:n,joinedAt:Date.now()});setUid(id);closeSheet();render();toast('Bem-vindo, '+n+'! 🔥');}
+  catch(e){writeError(e);b.disabled=false;}
+}
+
+function claimPlayer(id){
+  if(!players.some(function(p){return p.id===id;}))return;
+  setUid(id);closeSheet();render();toast('Pronto! Agora é só registrar 💪');
+}
+
+async function saveWorkout(){
+  if(saving||!db||!uid)return;
+  var date=$('fDate').value;
+  if(!date||date<START||date>END){toast('Data fora do período do desafio');return;}
+  if(date>today()){toast('Não vale registrar treino do futuro 😉');return;}
+  var doc={uid:uid,type:addKind,date:date,ts:Date.now()};
+  if(addKind==='run'){
+    var km=parseFloat(($('fKm').value||'').replace(',','.'));
+    if(!(km>0)||km>200){toast('Informe os km corridos');return;}
+    doc.km=Math.round(km*100)/100;
+  }else{
+    if(!selM.size){toast('Escolha ao menos um grupo muscular');return;}
+    doc.muscles=MUSCLES.filter(function(m){return selM.has(m);});
+  }
+  var dur=parseInt($('fDur').value,10);
+  if(dur>0&&dur<1000)doc.dur=dur;
+  saving=true;var b=$('btnSave');b.disabled=true;
+  try{await db.collection('workouts').add(doc);closeSheet();toast('Treino salvo! 💪');}
+  catch(e){writeError(e);if($('btnSave'))$('btnSave').disabled=false;}
+  finally{saving=false;}
+}
+
+async function saveSettings(){
+  if(!db)return;
+  var g=parseInt($('sGoal').value,10);
+  var sn=$('sName');
+  try{
+    if(sn){
+      var n=(sn.value||'').trim();
+      if(n&&me()&&n!==me().name)await db.doc('players/'+uid).update({name:n});
+    }
+    if(g>=10&&g<=2000&&g!==(settings.kmGoal||DEFAULT_GOAL))await db.doc('settings/main').set({kmGoal:g});
+    closeSheet();toast('Ajustes salvos');
+  }catch(e){writeError(e);}
+}
+
+async function deleteWorkout(id){
+  if(!db)return;
+  try{await db.doc('workouts/'+id).delete();delId=null;toast('Treino apagado');}
+  catch(e){writeError(e);}
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener('click',function(e){
+  var el=e.target.closest('[data-act]');if(!el)return;
+  var act=el.getAttribute('data-act');
+  if(act==='tab'){
+    tab=el.getAttribute('data-t');
+    document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b===el);});
+    delId=null;render();window.scrollTo(0,0);
+  }else if(act==='add')openAdd();
+  else if(act==='join')openJoin();
+  else if(act==='settings')openSettings();
+  else if(act==='close')closeSheet();
+  else if(act==='kind'){
+    addKind=el.getAttribute('data-k');
+    document.querySelectorAll('.seg button').forEach(function(b){b.classList.toggle('on',b===el);});
+    $('blkRun').hidden=addKind!=='run';$('blkGym').hidden=addKind!=='gym';
+  }else if(act==='chip'){
+    var m=el.getAttribute('data-m');
+    if(selM.has(m)){selM.delete(m);el.classList.remove('on');}else{selM.add(m);el.classList.add('on');}
+  }
+  else if(act==='save')saveWorkout();
+  else if(act==='claim')claimPlayer(el.getAttribute('data-id'));
+  else if(act==='switch'){setUid(null);closeSheet();render();openJoin();}
+  else if(act==='saveJoin')saveJoin();
+  else if(act==='saveSettings')saveSettings();
+  else if(act==='del'){
+    var id=el.getAttribute('data-id');
+    if(delId===id){clearTimeout(delTimer);deleteWorkout(id);}
+    else{delId=id;render();clearTimeout(delTimer);delTimer=setTimeout(function(){delId=null;render();},3500);}
+  }
+});
+
+/* ---------- dados ---------- */
+function onErr(e){
+  subErr=(e&&e.code==='permission-denied')?'Sem permissão para ler os dados. Confira as regras do Firestore.':'Falha ao sincronizar. Tente recarregar.';
+  loaded.p=loaded.w=loaded.s=true;render();
+}
+
+function maybePromptJoin(){
+  if(!loaded.p)return;
+  if(uid&&!me())setUid(null);
+  if(joinPrompted||me())return;
+  joinPrompted=true;openJoin();
+}
+
+async function init(){
+  render();
+  setTimeout(function(){forceShow=true;render();},3000);
+  try{uid=localStorage.getItem(UID_KEY)||null;}catch(e){uid=null;}
+  if(!firebaseConfig.apiKey||firebaseConfig.apiKey.indexOf('COLE')===0){needConfig=true;nodb=true;render();return;}
+  try{db=makeDb();}catch(e){nodb=true;render();return;}
+  db.collection('players').onSnapshot(function(s){
+    players=s.docs.map(function(d){var x=d.data()||{};return {id:d.id,name:x.name||'Jogador',joinedAt:x.joinedAt||0};})
+      .sort(function(a,b){return a.joinedAt-b.joinedAt;});
+    loaded.p=true;render();maybePromptJoin();
+  },onErr);
+  db.collection('workouts').onSnapshot(function(s){
+    workouts=s.docs.map(function(d){var x=d.data()||{};x.id=d.id;return x;});
+    loaded.w=true;render();
+  },onErr);
+  db.doc('settings/main').onSnapshot(function(s){
+    var x=s.exists?s.data():null;
+    settings={kmGoal:(x&&x.kmGoal>0)?x.kmGoal:DEFAULT_GOAL};
+    loaded.s=true;render();
+  },onErr);
+}
+init();
+})();
+</script>
+</body>
+</html>
